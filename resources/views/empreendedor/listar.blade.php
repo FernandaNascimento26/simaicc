@@ -1,8 +1,12 @@
 @extends('layouts.app')
+@extends('layouts.menu')
 @section('content')
 
-
 <div class="container">
+  <div id="app">
+        @include('flash-message')
+        @yield('content')
+    </div>
 
   <h1 style="font-size: 20px; font-family: Arial;">Empreendedores</h1>
 </br>

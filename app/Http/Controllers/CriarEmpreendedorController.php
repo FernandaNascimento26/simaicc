@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Empreendedor;
+use App\Atividade;
+use App\Secretaria;
+use Illuminate\Support\Facades\Validator;
 
 class CriarEmpreendedorController extends Controller
 {
@@ -15,18 +18,44 @@ class CriarEmpreendedorController extends Controller
 		return view("empreendedor.listar",['empreendedores'=>$empreendedores]);
 
 	}
-   public function create()
+	public function create()
 	{
-		return view("empreendedor.inserir");
-		$emp = Empreendedor::find($id);
-		$emp->atividade_id = $request->input('atividade_id');
+		$secretarias = Secretaria::all();
+		$atividades = Atividade::all();
+		//dd($atividades[0]->atividade);
 
+		return view("empreendedor.inserir", compact('atividades','secretarias'));
 	}
+
 
 	public function store(Request $request)
 	{
+
+		$validacao = $request->validate([
+			'nome' => 'required',
+			'sexo' => 'required',
+			'rg' => 'required|numeric',
+			'cpf' => 'nullable|numeric',
+			'dt_nasc' => 'required',
+			'secretaria_id' => 'required',
+			'rua' => 'required',
+			'numero' => 'nullable',
+			'bairro' => 'required',
+			'cidade' => 'required',
+			'estado' => 'required',
+			'cep' => 'required|numeric',
+			'telefone' => 'required|numeric',
+			'escolaridade' => 'required',
+			'atividade_id' => 'required',
+			'trabalha_informal' => 'required',
+			'ganho_mensal' => 'nullable',
+			'formacao_atividade' => 'required',
+
+
+		]);
+
+
 		$empreendedor = new Empreendedor();
-        //$empreendedor->id = $request->input('id');
 		$empreendedor->nome = $request->input('nome');
 		$empreendedor->sexo = $request->input('sexo');
 		$empreendedor->rg = $request->input('rg');
@@ -36,7 +65,6 @@ class CriarEmpreendedorController extends Controller
 		$empreendedor->rua = $request->input('rua');
 		$empreendedor->numero = $request->input('numero');
 		$empreendedor->bairro = $request->input('bairro');
-		$empreendedor->cidade = $request->input('cidade');
 		$empreendedor->cidade = $request->input('cidade');
 		$empreendedor->estado = $request->input('estado');
 		$empreendedor->cep = $request->input('cep');
@@ -49,6 +77,7 @@ class CriarEmpreendedorController extends Controller
 
 
 		$empreendedor->save();
+		$request->session()->flah('alert-success','Empreendedor Cadastrado com Sucesso!');
 		return redirect()->route('empreendedor.index');
 
 
@@ -56,8 +85,11 @@ class CriarEmpreendedorController extends Controller
 
 	public function show($id)
 	{
-		$empreendedor = Empreendedor::find($id);
-		return view('empreendedor.mostrar', ['e'=> $empreendedor]);
+		$atividades = Atividade::find($id);
+		//$empreendedor = Empreendedor::find($id);
+		$dados = $atividades->empreendedor;
+		return view('empreendedor.mostrar',['empreendedor'=> $dados]);
+
 	}
 
 }

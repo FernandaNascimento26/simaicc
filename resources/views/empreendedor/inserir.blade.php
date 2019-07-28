@@ -6,12 +6,24 @@
 </head>
 <body>
   <div class="container-fluid">
+     @if ($errors->any())
+         <div class="alert alert-danger">
+            <ul>
+             @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+           @endforeach
+           </ul>
+         </div>
+     @endif
+
+     <div id="app">
+        @include('flash-message')
+        @yield('content')
+    </div>
 
     <h3 class="page-header" style="font-size: 20px; font-family: Arial;" align="center">Cadastrar Empreendedor</h3>
   </br>
-
   <h3 class="page-header" style="font-size: 20px; font-family: Arial;">Dados Pessoais</h3>
-
   <form method="POST" action="{{route('empreendedor.store')}}" id="form">
     <!-- area de campos do form -->
     @csrf
@@ -49,7 +61,11 @@
 <div class="row">
   <div class="form-group col-md-4">
    <label for="campo1">Secretaria</label>
-   <input type="text" class="form-control" id="secretaria_id" name="secretaria_id">
+   <select name="secretaria_id" class="form-control">
+  @foreach($secretarias as $secretaria)
+  <option value="{{$secretaria->id}}">{{$secretaria->cidade}}</option> 
+  @endforeach
+</select>
  </div>
  <div class="form-group col-md-3">
    <label for="campo1">Telefone</label>
@@ -96,7 +112,12 @@
  </div>
  <div class="form-group col-md-4">
    <label for="campo1">Atividade</label>
-   <input type="text" class="form-control" id="atividade_id" name="atividade_id" placeholder="">
+
+  <select name="atividade_id" class="form-control">
+  @foreach($atividades as $atividade)
+  <option value="{{$atividade->id}}">{{$atividade->atividade}}</option> 
+  @endforeach
+</select>
  </div>
  <div class="form-group col-md-4">
    <label for="campo1">Tipo de trabalho</label><br/>
@@ -115,11 +136,6 @@
  </div>
 </div>
 <hr>
-
-
-
-
-
 <div id="actions" class="row">
   <div class="col-md-12">
     <button id='btn-cadastrar-secretaria' type="submit" class="btn btn-success mr-sm-2">Salvar</button>
@@ -127,11 +143,8 @@
   </div>
 </div>
 </form>
-
 <br>
-
 </div>
-
 </body>
 </html>
 @endsection

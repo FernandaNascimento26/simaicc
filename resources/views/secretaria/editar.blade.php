@@ -2,8 +2,21 @@
 @section('content')
 
 <body>
-
   <div class="container">
+    @if ($errors->any())
+     <div class="alert alert-danger">
+      <ul>
+       @foreach ($errors->all() as $error)
+       <li>{{ $error }}</li>
+       @endforeach
+     </ul>
+   </div>
+   @endif
+
+    <div id="app">
+        @include('flash-message')
+        @yield('content')
+    </div>
 
     <h1 style="font-size: 20px;">Editar Secretaria</h1>
     <br>

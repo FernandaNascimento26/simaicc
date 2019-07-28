@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Empreendedor;
+use App\Secretaria;
+use App\Atividade;
 
 class EmpreendedorController extends Controller
 {
@@ -18,14 +20,38 @@ class EmpreendedorController extends Controller
 
 	public function create()
 	{
-		return view("empreendedor.inserir");
-		$emp = Empreendedor::find($id);
-		$emp->atividade_id = $request->input('atividade_id');
+		$secretarias = Secretaria::all();
+		$atividades = Atividade::all();
+		//dd($atividades[0]->atividade);
+		return view("empreendedor.inserir", compact('atividades','secretarias'));
 
 	}
 
 	public function store(Request $request)
 	{
+
+		$validacao = $request->validate([
+			'nome' => 'required',
+			'sexo' => 'required',
+			'rg' => 'required|numeric',
+			'cpf' => 'nullable|numeric',
+			'dt_nasc' => 'required',
+			'secretaria_id' => 'required',
+			'rua' => 'required',
+			'numero' => 'nullable',
+			'bairro' => 'required',
+			'cidade' => 'required',
+			'estado' => 'required',
+			'cep' => 'required|numeric',
+			'telefone' => 'required|numeric',
+			'escolaridade' => 'required',
+			'atividade_id' => 'required',
+			'trabalha_informal' => 'required',
+			'ganho_mensal' => 'nullable|numeric',
+			'formacao_atividade' => 'required',
+
+		]);
+
 		$empreendedor = new Empreendedor();
         //$empreendedor->id = $request->input('id');
 		$empreendedor->nome = $request->input('nome');
@@ -48,9 +74,9 @@ class EmpreendedorController extends Controller
 		$empreendedor->ganho_mensal = $request->input('ganho_mensal');
 		$empreendedor->formacao_atividade = $request->input('formacao_atividade');
 
-
 		$empreendedor->save();
-		return redirect()->route('empreendedor.index');
+
+		return redirect()->route('empreendedor.index')->with('success','Empreendedor cadastrado!');
 
 
 	}
@@ -64,19 +90,46 @@ class EmpreendedorController extends Controller
 
 	public function edit($id)
 	{
-		$empreendedor = Empreendedor::find($id);
-		return view('empreendedor.editar', ['e' => $empreendedor]);
+
+		$e = Empreendedor::find($id);
+		$secretarias = Secretaria::all();
+		$atividades = Atividade::all();
+		//dd($atividades[0]->atividade);
+
+		return view("empreendedor.editar", compact('e','atividades','secretarias'));
 	}
 
 	public function update(Request $request, $id)
 	{
-       //echo "$id";
-      //$empreendedor->id = $request->input('id');
+
+      $validacao = $request->validate([
+			'nome' => 'required',
+			'sexo' => 'required',
+			'rg' => 'required|numeric',
+			'cpf' => 'nullable|numeric',
+			'dt_nasc' => 'required',
+			'secretaria_id' => 'required',
+			'rua' => 'required',
+			'numero' => 'nullable',
+			'bairro' => 'required',
+			'cidade' => 'required',
+			'estado' => 'required',
+			'cep' => 'required|numeric',
+			'telefone' => 'required|numeric',
+			'escolaridade' => 'required',
+			'atividade_id' => 'required',
+			'trabalha_informal' => 'required',
+			'ganho_mensal' => 'nullable',
+			'formacao_atividade' => 'required',
+
+		]);
+
+		$empreendedor = Empreendedor::find($id);
 		$empreendedor->nome = $request->input('nome');
 		$empreendedor->sexo = $request->input('sexo');
 		$empreendedor->rg = $request->input('rg');
 		$empreendedor->cpf = $request->input('cpf');
-		$empreendedor->dt_nas = $request->input('dt_nas');
+		$empreendedor->dt_nasc = $request->input('dt_nasc');
 		$empreendedor->secretaria_id = $request->input('secretaria_id');
 		$empreendedor->rua = $request->input('rua');
 		$empreendedor->numero = $request->input('numero');
@@ -91,10 +144,11 @@ class EmpreendedorController extends Controller
 		$empreendedor->trabalha_informal = $request->input('trabalha_informal');
 		$empreendedor->ganho_mensal = $request->input('ganho_mensal');
 		$empreendedor->formacao_atividade = $request->input('formacao_atividade');
-
 		$empreendedor->save();
+		
+		return redirect()->route('empreendedor.index')->with('success','Empreendedor Atualizado!');
 
-		return redirect()->route('empreendedor.index');
+
 	}
 
 	public function destroy($id)
@@ -102,7 +156,7 @@ class EmpreendedorController extends Controller
         $empreendedor = Empreendedor::find($id); // consulta no BD
         $empreendedor->delete();  // Exclui do BD
 
-        return redirect()->route('empreendedor.index');
+        return redirect()->route('empreendedor.index')->with('success','Excluido com sucesso!');
     }
 
 
