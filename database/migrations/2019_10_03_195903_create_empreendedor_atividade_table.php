@@ -15,9 +15,9 @@ class CreateEmpreendedorAtividadeTable extends Migration
     {
         Schema::create('empreendedor_atividade', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('empreendedor_id');
+             $table->unsignedBigInteger('empreendedor_id');
             $table->unsignedBigInteger('atividade_id');
-            $table->foreign('empreendedor_id')->references('id')->on('empreendedores');
+            $table->foreign('empreendedor_id')->references('id')->on('empreendedors');
             $table->foreign('atividade_id')->references('id')->on('atividades');
             $table->timestamps();
         });

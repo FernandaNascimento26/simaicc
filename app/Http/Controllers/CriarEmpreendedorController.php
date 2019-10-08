@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Empreendedor;
-use App\Atividade;
 use App\Secretaria;
-use Illuminate\Support\Facades\Validator;
+use App\Atividade;
 
 class CriarEmpreendedorController extends Controller
 {
@@ -18,15 +17,15 @@ class CriarEmpreendedorController extends Controller
 		return view("empreendedor.listar",['empreendedores'=>$empreendedores]);
 
 	}
+
 	public function create()
 	{
 		$secretarias = Secretaria::all();
 		$atividades = Atividade::all();
-		//dd($atividades[0]->atividade);
-
+		
 		return view("empreendedor.inserir", compact('atividades','secretarias'));
-	}
 
+	}
 
 	public function store(Request $request)
 	{
@@ -48,14 +47,13 @@ class CriarEmpreendedorController extends Controller
 			'escolaridade' => 'required',
 			'atividade_id' => 'required',
 			'trabalha_informal' => 'required',
-			'ganho_mensal' => 'nullable',
+			'ganho_mensal' => 'nullable|numeric',
 			'formacao_atividade' => 'required',
-
 
 		]);
 
-
-		$empreendedor = new Empreendedor();
+		$empreendedor = new Empreendedor(); // Pega todos os empreededores do BD
+        //$empreendedor->id = $request->input('id');
 		$empreendedor->nome = $request->input('nome');
 		$empreendedor->sexo = $request->input('sexo');
 		$empreendedor->rg = $request->input('rg');
@@ -66,6 +64,7 @@ class CriarEmpreendedorController extends Controller
 		$empreendedor->numero = $request->input('numero');
 		$empreendedor->bairro = $request->input('bairro');
 		$empreendedor->cidade = $request->input('cidade');
+		$empreendedor->cidade = $request->input('cidade');
 		$empreendedor->estado = $request->input('estado');
 		$empreendedor->cep = $request->input('cep');
 		$empreendedor->telefone = $request->input('telefone');
@@ -75,20 +74,10 @@ class CriarEmpreendedorController extends Controller
 		$empreendedor->ganho_mensal = $request->input('ganho_mensal');
 		$empreendedor->formacao_atividade = $request->input('formacao_atividade');
 
-
 		$empreendedor->save();
-		$request->session()->flah('alert-success','Empreendedor Cadastrado com Sucesso!');
-		return redirect()->route('empreendedor.index');
 
+		return redirect()->route('empreendedor.index')->with('success','Empreendedor cadastrado!');
 
-	}
-
-	public function show($id)
-	{
-		$atividades = Atividade::find($id);
-		//$empreendedor = Empreendedor::find($id);
-		$dados = $atividades->empreendedor;
-		return view('empreendedor.mostrar',['empreendedor'=> $dados]);
 
 	}
 

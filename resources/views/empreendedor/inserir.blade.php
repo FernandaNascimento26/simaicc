@@ -24,7 +24,7 @@
     <h3 class="page-header" style="font-size: 20px; font-family: Arial;" align="center">Cadastrar Empreendedor</h3>
   </br>
   <h3 class="page-header" style="font-size: 20px; font-family: Arial;">Dados Pessoais</h3>
-  <form method="POST" action="{{route('empreendedor.store')}}" id="form">
+  <form method="POST" action="{{route('empreendedor.store')}}" id="form" enctype="multipart/form-data">
     <!-- area de campos do form -->
     @csrf
     <div class="row">
@@ -133,6 +133,12 @@
    <label for="campo1">Possui Formação na Atividade Desenvolvida</label><br/>
    <input type="radio" id="formacao_atividade1" name="formacao_atividade" value="Sim"><label for="formacao_atividade1">Sim</label><br/>
    <input type="radio" id="formacao_atividade2" name="formacao_atividade" value="Não"><label for="formacao_atividade2">Não</label><br/>
+ </div>
+
+ <div class="form-group">
+  <label for="imagem"> Imagem</label> <br>
+  <input type="file" name="imagem" id="imagem">
+   
  </div>
 </div>
 <hr>

@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 use App\Empreendedor;
 use App\Secretaria;
 use App\Atividade;
+use \Validator;
+use File;
 
 class EmpreendedorController extends Controller
 {
@@ -29,6 +32,9 @@ class EmpreendedorController extends Controller
 
 	public function store(Request $request)
 	{
+		$mensagens = [
+          'imagem.mimes' => 'Somente imagem no formato de jpeg e png.',
+      ];
 
 		$validacao = $request->validate([
 			'nome' => 'required',
@@ -49,8 +55,19 @@ class EmpreendedorController extends Controller
 			'trabalha_informal' => 'required',
 			'ganho_mensal' => 'nullable|numeric',
 			'formacao_atividade' => 'required',
+			'imagem'=>'nullable|mimes:jpeg,png',
 
 		]);
+
+      if(Input::file('imagem'))
+      {
+        $imagem = Input::file('imagem');
+        $extensao = $imagem->getClientOriginalExtension();
+        if($extensao != 'jpg' && $extensao != 'png')
+        {
+          return back()->with('erro','Erro: Este arquivo não é imagem');
+        }
+      }
 
 		$empreendedor = new Empreendedor();
         //$empreendedor->id = $request->input('id');
@@ -73,6 +90,10 @@ class EmpreendedorController extends Controller
 		$empreendedor->trabalha_informal = $request->input('trabalha_informal');
 		$empreendedor->ganho_mensal = $request->input('ganho_mensal');
 		$empreendedor->formacao_atividade = $request->input('formacao_atividade');
+		 if(Input::file('imagem'))
+      {
+        File::move($imagem,public_path().'/imagens'.$empreendedor->id.'.'.$extensao);
+        $empreendedor->imagem = '/imagens'.$empreendedor->id.'.'.$extensao;
 
 		$empreendedor->save();
 
@@ -80,6 +101,7 @@ class EmpreendedorController extends Controller
 
 
 	}
+}
 
 	public function show($id)
 	{
@@ -121,6 +143,7 @@ class EmpreendedorController extends Controller
 			'trabalha_informal' => 'required',
 			'ganho_mensal' => 'nullable',
 			'formacao_atividade' => 'required',
+			'imagem'=>'required|mimes:jpeg,png',
 
 		]);
 
@@ -144,6 +167,7 @@ class EmpreendedorController extends Controller
 		$empreendedor->trabalha_informal = $request->input('trabalha_informal');
 		$empreendedor->ganho_mensal = $request->input('ganho_mensal');
 		$empreendedor->formacao_atividade = $request->input('formacao_atividade');
+		$empreendedor->imagem = $request->input('imagem');
 		$empreendedor->save();
 		
 		return redirect()->route('empreendedor.index')->with('success','Empreendedor Atualizado!');

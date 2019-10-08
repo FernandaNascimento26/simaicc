@@ -2,7 +2,7 @@
 @section('content')
 
 <head>
-  <script type="text/javascript" src="func.js"></script>
+  <link rel="stylesheet"  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T">
 </head>
 <body>
   <div class="container-fluid">
@@ -14,6 +14,9 @@
 
   <form method="POST" action="{{route('empreendedor.show',$e->id)}}" id="form">
     @csrf 
+    <div>
+     <img src="{!!url($e->imagem)!!}" width="80px" height="80px">
+    </div> <br>
     <div class="row">
      <div class="form-group col-md-4">
        <label for="campo1">Nome</label>

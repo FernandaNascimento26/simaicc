@@ -19,6 +19,7 @@
 
       <thead>
         <tr>
+          <th>Foto</th>
           <th>Nome</th>
           <th class="actions"></th>
           <th class="actions"></th>
@@ -27,6 +28,7 @@
       <tbody>
        @foreach($empreendedores as $e)
        <tr>
+        <td> <img src="{!!url($e->imagem)!!}" width="70px" height="70px"></td>
         <td>{{$e->nome}}</td>
         <td class="actions">
          <td><a class="btn btn-warning btn-xs" href="{{route('empreendedor.show', $e->id) }}">Abrir</a>
